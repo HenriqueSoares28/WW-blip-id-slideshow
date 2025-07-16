@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Slideshow de Vídeos</title>
+  <style>
+    body {
+      margin: 0;
+      background: black;
+      overflow: hidden;
+    }
+    video {
+      width: 100vw;
+      height: 100vh;
+      object-fit: contain;
+      background: black;
+    }
+  </style>
+</head>
+<body>
+
+<video id="video" autoplay muted></video>
+
+<script>
+let currentIndex = 0;
+let videoList = [];
+
+async function loadVideos() {
+  try {
+    const response = await fetch("lista.json?_=" + Date.now());
+    videoList = await response.json();
+    if (videoList.length > 0) {
+      if (currentIndex >= videoList.length) currentIndex = 0;
+      playVideo(currentIndex);
+    }
+  } catch (e) {
+    console.error("Erro ao carregar lista de vídeos:", e);
+  }
+}
+
+function playVideo(index) {
+  const video = document.getElementById("video");
+  video.src = videoList[index];
+  video.play();
+  video.onended = () => {
+    currentIndex = (index + 1) % videoList.length;
+    playVideo(currentIndex);
+  };
+}
+
+// Atualiza a lista de vídeos a cada 30 segundos
+setInterval(loadVideos, 30000);
+
+// Inicializa
+loadVideos();
+</script>
+
+</body>
+</html>
