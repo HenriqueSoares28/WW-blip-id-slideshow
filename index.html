@@ -27,7 +27,7 @@ let videoList = [];
 
 async function loadVideos() {
   try {
-    const response = await fetch("lista.json?_=" + Date.now());
+    const response = await fetch("lista.json");
     videoList = await response.json();
     if (videoList.length > 0) {
       if (currentIndex >= videoList.length) currentIndex = 0;
